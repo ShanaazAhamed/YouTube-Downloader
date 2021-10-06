@@ -21,12 +21,20 @@ def search():
     except:
         messagebox.showwarning("Error", "Invalid Link")
         link_enter.delete(0, 'end')
+        l5.config(text="")
+        l7.config(text="")
 
 def Download():
-    yt = YouTube(str(link.get()))
-    ys = yt.streams.get_highest_resolution()
-    ys.download()
-    messagebox.showinfo("Done", "Successfully Download")
+    try:
+        yt = YouTube(str(link.get()))
+        ys = yt.streams.first()
+        ys.download()
+        messagebox.showinfo("Done", "Successfully Download")
+   
+    except:
+        messagebox.showwarning("Error", "Invalid Link")
+        link_enter.delete(0, 'end')
+    
 
 
 icon = PhotoImage(file="icon.png")
