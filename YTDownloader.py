@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from pytube import YouTube
+import os
 
 
 root = Tk()
@@ -9,7 +10,7 @@ root.resizable(0, 0)
 root.title("YT Downloader")
 root.configure(background="#171717")
 link = StringVar()
-
+path = str(os.getcwd())
 
 def search():
     try:
@@ -24,21 +25,24 @@ def search():
         l5.config(text="")
         l7.config(text="")
 
+
 def Download():
     try:
         yt = YouTube(str(link.get()))
-        ys = yt.streams.first()
-        ys.download()
+        if val.get() == 'Video':
+            ys = yt.streams.filter(file_extension = "mp4").first()
+            ys.download(path+'/Downloads/Video/')
+        else:
+            ys = yt.streams.filter(type = "audio").first()
+            ys.download(path+'/Downloads/Audio/') 
         messagebox.showinfo("Done", "Successfully Download")
-   
+
     except:
         messagebox.showwarning("Error", "Invalid Link")
         link_enter.delete(0, 'end')
-    
 
 
-icon = PhotoImage(file="icon.png")
-
+icon = PhotoImage(file=path+"/icon.png")
 
 root.iconphoto(False, icon)
 l1 = Label(root, image=icon, bg="#171717")
@@ -74,23 +78,26 @@ l6.grid(row=3, column=0, sticky=W, pady=2,  ipadx='5px')
 l7 = Label(root, text="", bg="#171717", fg='#ffffff', font='arial 10 bold')
 l7.grid(row=3, column=1, sticky=W, pady=2, padx='15px')
 
-l8 = Label(root, text="Qualities", bg="#171717",
+
+
+l8 = Label(root, text="Format", bg="#171717",
            fg='#ffffff', font='arial 10 bold')
-l8.grid(row=4, column=0, sticky=W, pady=2,  ipadx='5px')
+l8.grid(row=6, column=0, sticky=W, pady=2,  ipadx='5px')
 
 
-options = [
-    ""
-]
+options = ["Video","Audio"]
+
 
 # Create Dropdown menu
-drop = OptionMenu(root, "--", *options)
-drop.grid(row=4, column=1, sticky=W, pady=2, padx='15px', ipady=2)
+val = StringVar()
+val.set(options[0])
+drop = OptionMenu(root, val, *options)
+drop.grid(row=6, column=1, sticky=W, pady=2, padx='15px', ipady=2)
 
 
-Download = Button(root, text="Downoad", bg="#b33f40",
+download = Button(root, text="Downoad", bg="#b33f40",
                   fg="#ffffff", font='arial 10 bold', command=Download)
-Download.grid(row=5, column=1, sticky=E, pady=2, padx='15px', ipady=2)
+download.grid(row=7, column=1, sticky=E, pady=2, padx='15px', ipady=2)
 
 
 root.mainloop()
