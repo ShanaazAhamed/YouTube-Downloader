@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 from pytube import YouTube
 import os
+import webbrowser
 
 
 root = Tk()
@@ -11,6 +12,7 @@ root.title("YT Downloader")
 root.configure(background="#171717")
 link = StringVar()
 path = str(os.getcwd())
+
 
 def search():
     try:
@@ -30,12 +32,18 @@ def Download():
     try:
         yt = YouTube(str(link.get()))
         if val.get() == 'Video':
-            ys = yt.streams.filter(file_extension = "mp4").first()
+            ys = yt.streams.filter(file_extension="mp4").first()
             ys.download(path+'/Downloads/Video/')
         else:
-            ys = yt.streams.filter(type = "audio").first()
-            ys.download(path+'/Downloads/Audio/') 
-        messagebox.showinfo("Done", "Successfully Download")
+            ys = yt.streams.filter(type="audio").first()
+            ys.download(path+'/Downloads/Audio/')
+        answer = messagebox.askquestion(
+            "Done", "Successfully Download\nDo You want to Open?")
+        if answer == 'yes':
+            if val.get() == 'Video':
+                webbrowser.open(path+"/Downloads/Video")
+            else:
+                webbrowser.open(path+"/Downloads/Audio")
 
     except:
         messagebox.showwarning("Error", "Invalid Link")
@@ -79,13 +87,12 @@ l7 = Label(root, text="", bg="#171717", fg='#ffffff', font='arial 10 bold')
 l7.grid(row=3, column=1, sticky=W, pady=2, padx='15px')
 
 
-
 l8 = Label(root, text="Format", bg="#171717",
            fg='#ffffff', font='arial 10 bold')
 l8.grid(row=6, column=0, sticky=W, pady=2,  ipadx='5px')
 
 
-options = ["Video","Audio"]
+options = ["Video", "Audio"]
 
 
 # Create Dropdown menu
